@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="styles/main.css" type="text/css">
+    <link href="libraries/fontawesome-free-6.1.1-web/css/fontawesome.css" rel="stylesheet">
+    <link href="libraries/fontawesome-free-6.1.1-web/css/solid.css" rel="stylesheet">
+    <style>
+    </style>
+    <title>fontawesome Web Fonts + CSS </title>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row intro-text">
+            <div class="col">
+              <p>
+                <h2>Alright, the plan is to make some pointer animation things just like we use to have on the Internet in the good old days</h2>
+                <ol>
+                  <li>When the mouse moves we want to put out a trail of garbage aka icons. I guess they will fade over time??? If they stayed that would be both cool and make the document unreadable.</li>
+                  <li>I like the skull because it is very spooky</li>
+                  <li>We have put the font awesome webfonts and css on the page.</li>
+                  <li>In theory we can have options to change the icon and the colour and the fade speed.</li>
+                  <li>We need a jquery function to add the pointer animation to the page. Or whatever element. You could add it to the html element, then the icons elements are going to be created outside of the body of the page (ruh roh). Potentially you could add different animations (icons/colours) to different elements on the page??!? We're unstoppable.</li>
+                  <li>It is a bit of a pain having to have all the fontawesome stuff though. A user has to add the fontawesome css, put the webfonts in the right locations, and add our js. That sucks.</li>
+                </ol>
+              </p>
+              <p>
+                This chunk of text just has the defaults applied to it.
+              </p>
+            </div>
+        </div>
+        <div class="row second-row">
+          <div class="col">
+            <p>
+              For this area we area going to apply these values
+            </p>
+            <p>
+              <pre>
+                $('.second-row').StartShenanigans( 
+                  { 
+                    'icon' : 'hippo', // pick a different icon https://fontawesome.com/icons/shoe-prints?s=solid&f=classic
+                    'iconColour' : '#ff0000' // set the colour of the icon
+                  }
+                );
+              </pre>
+            </p>
+          </div>
+        </div>
+        <div class="row third-row">
+          <div class="col">
+            <p>
+              For this area we area going to apply these values
+            </p>
+            <p>
+              <pre>
+                $('.third-row').StartShenanigans( 
+                  { 
+                    'icon' : 'bomb',
+                    'travelDistanceForNewIcon' : 50,  // space them out
+                    'opacityIncrement': 0.05, // really slow fade
+                    'fadeDelay': 100, // really slow fade
+                  }
+                );
+              </pre>
+            </p>
+          </div>
+        </div>
+        <div class="row forth-row">
+          <div class="col">
+            <p>
+              For this area we area going to apply these values
+            </p>
+            <p>
+              <pre>
+                $('.forth-row').StartShenanigans( 
+                  { 
+                    'icon' : 'shoe-prints',
+                    'iconColour' : '#FF0090',
+                    'fadeIconEnabled' : false, // don't fade out the icons
+                  }
+                );
+              </pre>
+            </p>
+          </div>
+        </div>
+    </div>
+    <script src="scripts/jquery-3.3.1.min.js"></script>
+    <script src="scripts/pshen.js"></script>
+    <script>
+      $('.intro-text').StartShenanigans( 
+      );
+      $('.second-row').StartShenanigans( 
+        { 
+          'icon' : 'hippo', // pick a different icon https://fontawesome.com/icons/shoe-prints?s=solid&f=classic
+          'iconColour' : '#ff0000' // set the colour of the icon
+        }
+      );
+      $('.third-row').StartShenanigans( 
+        { 
+          'icon' : 'bomb',
+          'travelDistanceForNewIcon' : 50,  // space them out
+          'opacityIncrement': 0.05, // really slow fade
+          'fadeDelay': 100, // really slow fade
+        }
+      );
+      $('.forth-row').StartShenanigans( 
+        { 
+          'icon' : 'shoe-prints',
+          'iconColour' : '#FF0090',
+          'fadeIconEnabled' : false, // don't fade out the icons
+        }
+      );
+    </script>
+  </body>
+</html>

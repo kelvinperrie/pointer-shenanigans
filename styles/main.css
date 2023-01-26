@@ -1,0 +1,20 @@
+
+/* needed for the pointer animations to work */
+.shen-icon {
+  position: absolute;
+}
+
+
+/* this is just stuff to make our particular page look better */
+.row {
+  padding: 10px;
+}
+.intro-text, .third-row {
+  background-color: darkkhaki;
+}
+.second-row, .forth-row {
+  background-color: cornsilk;
+}
+
+
+
