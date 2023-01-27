@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="container">
-        <div class="row intro-text">
+        <div class="row default-row">
             <div class="col">
               <p>
                 <h2>Alright, the plan is to make some pointer animation things just like we use to have on the Internet in the good old days</h2>
@@ -25,9 +25,34 @@
                 </ol>
               </p>
               <p>
-                This chunk of text just has the defaults applied to it.
+                This chunk of text just has the defaults applied to it. All you have to do is pass in an image like this spooky ghost <img src="images/mystery.png" alt="ghosty image" />
+              </p>
+              <p>
+                <pre>
+                  $('.default-row').StartShenanigans( 
+                    { 
+                      'icon' : 'images/mystery.png'
+                    }
+                  );
+                </pre>
               </p>
             </div>
+        </div>
+        <div class="row first-row">
+          <div class="col">
+            <p>
+              For this area we are going to use the fontawesome library to provide the image - our default is the skull
+            </p>
+            <p>
+              <pre>
+                $('.first-row').StartShenanigans( 
+                  {
+                    'useFontAwesome' : true, // use fontawesome icons - the default is 'skull'
+                  }
+                );
+              </pre>
+            </p>
+          </div>
         </div>
         <div class="row second-row">
           <div class="col">
@@ -83,30 +108,51 @@
             </p>
           </div>
         </div>
+        <div class="row fifth-row">
+          <div class="col">
+            <p>
+              there's nothing here at the moment.
+              <br/><br/><br/><br/><br/>
+            </p>
+          </div>
+        </div>
     </div>
     <script src="scripts/jquery-3.3.1.min.js"></script>
-    <script src="scripts/pshen.js"></script>
+    <script src="scripts/pointer-shenangians.js"></script>
     <script>
-      $('.intro-text').StartShenanigans( 
-      );
-      $('.second-row').StartShenanigans( 
+      $('.default-row').StartShenanigans( 'iconTrail',
         { 
-          'icon' : 'hippo', // pick a different icon https://fontawesome.com/icons/shoe-prints?s=solid&f=classic
-          'iconColour' : '#ff0000' // set the colour of the icon
+          'icon' : 'images/mystery.png'
         }
       );
-      $('.third-row').StartShenanigans( 
+      $('.first-row').StartShenanigans( 'iconTrail',
+        {
+          'useFontAwesome' : true, // use fontawesome icons - the default is 'skull'
+        }
+      );
+      $('.second-row').StartShenanigans( 'iconTrail',
         { 
+          'useFontAwesome' : true,
+          'icon' : 'ghost',         // pick a different icon https://fontawesome.com/icons/shoe-prints?s=solid&f=classic
+          'iconColour' : '#fff', // set the colour of the icon
+          'iconScale' : 2           // make it a bit bigger, bigger ghost is scarier
+        }
+      );
+      $('.third-row').StartShenanigans( 'iconTrail',
+        { 
+          'useFontAwesome' : true,
           'icon' : 'bomb',
-          'travelDistanceForNewIcon' : 50,  // space them out
+          'travelDistanceForNewIcon' : 15,  // make them come closer together
           'opacityIncrement': 0.05, // really slow fade
           'fadeDelay': 100, // really slow fade
+          'makeIconDelay' : 20
         }
       );
-      $('.forth-row').StartShenanigans( 
+      $('.forth-row').StartShenanigans('iconTrail',
         { 
+          'useFontAwesome' : true,
           'icon' : 'shoe-prints',
-          'iconColour' : '#FF0090',
+          'iconColour' : '#6fa36e',
           'fadeIconEnabled' : false, // don't fade out the icons
         }
       );

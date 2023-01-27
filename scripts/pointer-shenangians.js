@@ -1,4 +1,4 @@
-var PointerShenanigans = function(parentContainer, settings) {
+var PointerShenanigansIconTrail = function(parentContainer, settings) {
     var self = this;
 
     self.parentContainer = parentContainer; // the element we are applying the animations too
@@ -9,7 +9,10 @@ var PointerShenanigans = function(parentContainer, settings) {
         opacityIncrement : 0.05,            // how much do we change the opacity by each time
         fadeIconEnabled : true,             // maybe keep the icons forever ... ?
         fadeDelay : 50,                     // the timeout value between changing the opacity / fading
-        travelDistanceForNewIcon : 20       // how much distance do we travel before making a new icon
+        travelDistanceForNewIcon : 20,      // how much distance do we travel before making a new icon
+        useFontAwesome : false,             // flag on whether to use icons from fontawesome or not
+        makeIconDelay : 50,                 // how often do we check to see if we need a new icon
+        iconScale: 1                        // uses css scaling to change image size 1 = no scaling, 0.5 = half size etc
     }
 
     self.settings = $.extend( {}, self.defaults, settings );
@@ -25,20 +28,37 @@ var PointerShenanigans = function(parentContainer, settings) {
             if(distance > self.settings.travelDistanceForNewIcon) {
 
                 // <i class="fa-solid fa-bicycle"></i>
-                $(self.parentContainer).append($('<div>', {
-                    class: 'shen-icon fa-solid fa-'+self.settings.icon,
-                    css: {
-                        "top": self.mousePosition.y,
-                        "left": self.mousePosition.x,
-                        "color" : self.settings.iconColour
-                    }
-                }));
+                if(self.settings.useFontAwesome) {
+                    // if they're using one of the fontawesome icons
+                    $(self.parentContainer).append($('<div>', {
+                        class: 'shen-icon fa-solid fa-'+self.settings.icon,
+                        css: {
+                            "top": self.mousePosition.y,
+                            "left": self.mousePosition.x,
+                            "color" : self.settings.iconColour,
+                            "transform": "scale("+ self.settings.iconScale +")"
+                        }
+                    }));
+                } else {
+                    // if they've specified an image file to use
+                    $(self.parentContainer).append($('<img/>', {
+                        //class: 'horizontalloader-image-' + i,
+                        class: 'shen-icon',
+                        src: self.settings.icon,
+                        alt: 'trail icon',
+                        css: {
+                            "top": self.mousePosition.y,
+                            "left": self.mousePosition.x,
+                            "transform": "scale("+ self.settings.iconScale +")"
+                        }
+                    }));
+                }
                 self.lastCreationPosition.x = self.mousePosition.x;
                 self.lastCreationPosition.y = self.mousePosition.y;
 
             }
         }
-        setTimeout(self.makeIcon, 100);
+        setTimeout(self.makeIcon, self.settings.makeIconDelay);
     }
     self.makeIcon();
 
@@ -89,9 +109,12 @@ var PointerShenanigans = function(parentContainer, settings) {
 };
 
 // wrapper to create as jquery function
-$.fn.StartShenanigans = function(settings) {
+$.fn.StartShenanigans = function(pointerType, settings) {
 
-    var newShenanigans = new PointerShenanigans($(this),settings)
-    return newShenanigans;
+    if(pointerType === 'iconTrail') {
+        new PointerShenanigansIconTrail($(this),settings)
+    } else {
+        console.log("mate, I dunno what " + pointerType + " is.");
+    }
 
 };
