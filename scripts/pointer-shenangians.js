@@ -1,3 +1,75 @@
+
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+var PointerShenanigansSparks = function(parentContainer, settings) {
+    var self = this;
+
+    self.parentContainer = parentContainer; // the element we are applying the animations too
+    self.defaults = {
+
+    }
+    self.settings = $.extend( {}, self.defaults, settings );
+
+    self.sparkCounter = 0;
+
+    self.createSpark = function() {
+        self.sparkCounter++;
+        let newSparkCount = self.sparkCounter;
+        let elementId = 'spark'+newSparkCount;
+        let newElement = $('<div>', {
+            id : elementId,
+            class: '',
+            'data-frame': '0',
+            css: {
+                "top": 100,
+                "left": 100,
+                "width": '25px',
+                "height": '25px',
+                "position" : "absolute",
+                "background-color": "black",
+                "background-image" : "url('images/spark-sprites-white.png')",
+                "background-position-x" : 0,
+                "background-position-y" : 0,
+                //"color" : self.settings.iconColour,
+                //"transform": "scale("+ self.settings.iconScale +")"
+            }
+        });
+        $(self.parentContainer).append(newElement);
+        //setTimeout(function() { self.animateSpark(elementId) }, 5000 );
+    }
+    self.createSpark();
+
+    self.animateSpark = function(elementId) {
+        let x = 0, y = 0;
+        let currentFrame = $("#"+elementId).data("frame");
+        let nextFrame = currentFrame+1;
+        if(nextFrame >= 8) nextFrame = 0;
+
+        if(nextFrame > 3) y = 25;
+        x = ((nextFrame % 4)) * 25;
+        
+        console.log("frame "+ nextFrame + " is going to show x " + x + " and y of " + y)
+        
+        $("#"+elementId).data("frame", nextFrame);
+        $("#"+elementId).css({ "background-position" : x+"px "+y+"px" })
+
+        setTimeout(function() { self.animateSpark(elementId) }, 5000 );
+    }
+
+    self.initialize = function() 
+    {
+        $(self.parentContainer).mousemove(function(event) {
+            console.log("firing")
+            // self.mousePosition.x = event.pageX;
+            // self.mousePosition.y = event.pageY;
+        });
+    }
+    self.initialize();
+}
+
+
 var PointerShenanigansIconTrail = function(parentContainer, settings) {
     var self = this;
 
@@ -112,7 +184,9 @@ var PointerShenanigansIconTrail = function(parentContainer, settings) {
 $.fn.StartShenanigans = function(pointerType, settings) {
 
     if(pointerType === 'iconTrail') {
-        new PointerShenanigansIconTrail($(this),settings)
+        new PointerShenanigansIconTrail($(this),settings);
+    } else if (pointerType === 'sparks') {
+        new PointerShenanigansSparks($(this),settings);
     } else {
         console.log("mate, I dunno what " + pointerType + " is.");
     }

@@ -1,7 +1,7 @@
 
 /* needed for the pointer animations to work */
 .shen-icon {
-  position: absolute;
+  position: absolute; /* just stick this on the element! */
 }
 
 
