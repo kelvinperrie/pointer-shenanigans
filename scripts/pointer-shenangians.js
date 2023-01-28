@@ -8,13 +8,18 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
 
     self.parentContainer = parentContainer; // the element we are applying the animations too
     self.defaults = {
-
+        frameDelay : 30,                    // essentially how fast the animation runs
+        makeSparkOnClick : true,
+        makeSparkOnMove : true,
+        percentChangeOfSparkOnMove : 20,
     }
     self.settings = $.extend( {}, self.defaults, settings );
 
     self.sparkCounter = 0;
 
-    self.createSpark = function() {
+    self.createSpark = function(x , y) {
+        // we're going to rotate it randomly - the options are from 0 to 1 where 1 = 1 full rotation
+        let rotation = randomIntFromInterval(1,100) / 100;
         self.sparkCounter++;
         let newSparkCount = self.sparkCounter;
         let elementId = 'spark'+newSparkCount;
@@ -23,48 +28,62 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
             class: '',
             'data-frame': '0',
             css: {
-                "top": 100,
-                "left": 100,
+                "top": y,
+                "left": x,
                 "width": '25px',
                 "height": '25px',
                 "position" : "absolute",
-                "background-color": "black",
+                // "background-color": "black",
                 "background-image" : "url('images/spark-sprites-white.png')",
                 "background-position-x" : 0,
                 "background-position-y" : 0,
-                //"color" : self.settings.iconColour,
-                //"transform": "scale("+ self.settings.iconScale +")"
+                "transform": "rotate("+ rotation +"turn)"
             }
         });
         $(self.parentContainer).append(newElement);
-        //setTimeout(function() { self.animateSpark(elementId) }, 5000 );
+        setTimeout(function() { self.animateSpark(elementId) }, self.settings.frameDelay );
     }
-    self.createSpark();
+    
 
     self.animateSpark = function(elementId) {
-        let x = 0, y = 0;
         let currentFrame = $("#"+elementId).data("frame");
         let nextFrame = currentFrame+1;
-        if(nextFrame >= 8) nextFrame = 0;
-
-        if(nextFrame > 3) y = 25;
-        x = ((nextFrame % 4)) * 25;
+        // if we've past the last frame then delete the element
+        if(nextFrame >= 8) {
+            $("#"+elementId).remove();
+            return;
+        }
+        // our spark animation is on a sprite sheet, so we have to figure out which sprite on the sheet to
+        // show. There are four columns and two rows.
+        let x = 0, y = 0;   // the x and the y is where you are positioning the image in the background of the element
+        if(nextFrame > 3) y = 25 * -1;      // lazy but true. If you're on the 4th frame it's the second row.
+        x = ((nextFrame % 4)) * 25 * -1;    
         
-        console.log("frame "+ nextFrame + " is going to show x " + x + " and y of " + y)
-        
-        $("#"+elementId).data("frame", nextFrame);
+        $("#"+elementId).data("frame", nextFrame); // we store the current frame in the html
         $("#"+elementId).css({ "background-position" : x+"px "+y+"px" })
 
-        setTimeout(function() { self.animateSpark(elementId) }, 5000 );
+        setTimeout(function() { self.animateSpark(elementId) }, self.settings.frameDelay );
     }
 
     self.initialize = function() 
     {
-        $(self.parentContainer).mousemove(function(event) {
-            console.log("firing")
-            // self.mousePosition.x = event.pageX;
-            // self.mousePosition.y = event.pageY;
-        });
+        if(self.settings.makeSparkOnClick) {
+            // we're going to make a spark on mouse click
+            $(self.parentContainer).click(function(event) {
+                self.createSpark(event.pageX,event.pageY);
+            });
+        }
+        if(self.settings.makeSparkOnMove) {
+            // we're going to make a spark on mouse move
+            $(self.parentContainer).mousemove(function(event) {
+                // we're only going to make the spark some of the time
+                // get a random number and see if it is below our threshold
+                let random = randomIntFromInterval(1,100);
+                if(random <= self.settings.percentChangeOfSparkOnMove) {
+                    self.createSpark(event.pageX,event.pageY);
+                }
+            });
+        }
     }
     self.initialize();
 }

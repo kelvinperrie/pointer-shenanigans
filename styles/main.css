@@ -9,14 +9,14 @@
 .row {
   padding: 10px;
 }
-.first-row, .third-row, .fifth-row {
+.first-row, .third-row  {
   background-color: darkkhaki;
 }
 .default-row, .forth-row {
   background-color: cornsilk;
 }
 
-.second-row {
+.second-row, .fifth-row, .sixth-row {
   background-color: black;
   color: #fff;
 }

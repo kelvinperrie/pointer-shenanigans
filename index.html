@@ -111,8 +111,16 @@
         <div class="row fifth-row">
           <div class="col">
             <p>
-              there's nothing here at the moment.
-              <br/><br/><br/><br/><br/>
+              This one just does a few sparks. Whatever the default is.
+              <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </p>
+          </div>
+        </div>
+        <div class="row sixth-row">
+          <div class="col">
+            <p>
+              This one is HARDCORE sparks.
+              <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </p>
           </div>
         </div>
@@ -121,7 +129,10 @@
     <script src="scripts/pointer-shenangians.js"></script>
     <script>
 
-      $('.second-row').StartShenanigans( 'sparks');
+      $('.fifth-row').StartShenanigans( 'sparks');
+      $('.sixth-row').StartShenanigans( 'sparks', {
+        "percentChangeOfSparkOnMove" : 100
+      });  
 
       $('.default-row').StartShenanigans( 'iconTrail',
         { 
@@ -138,7 +149,7 @@
           'useFontAwesome' : true,
           'icon' : 'ghost',         // pick a different icon https://fontawesome.com/icons/shoe-prints?s=solid&f=classic
           'iconColour' : '#fff', // set the colour of the icon
-          'iconScale' : 2           // make it a bit bigger, bigger ghost is scarier
+          'iconScale' : 0.5           // make it a bit bigger, bigger ghost is scarier
         }
       );
       $('.third-row').StartShenanigans( 'iconTrail',
