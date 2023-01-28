@@ -124,6 +124,22 @@
             </p>
           </div>
         </div>
+        <div class="row seventh-row">
+          <div class="col">
+            <p>
+              This one does lots of colours.
+              <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </p>
+          </div>
+        </div>
+        <div class="row eighth-row">
+          <div class="col">
+            <p>
+              What happens if you do more than one at once, some with slowed down animations?
+              <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </p>
+          </div>
+        </div>
     </div>
     <script src="scripts/jquery-3.3.1.min.js"></script>
     <script src="scripts/pointer-shenangians.js"></script>
@@ -132,7 +148,31 @@
       $('.fifth-row').StartShenanigans( 'sparks');
       $('.sixth-row').StartShenanigans( 'sparks', {
         "percentChangeOfSparkOnMove" : 100
+      });
+      $('.seventh-row').StartShenanigans( 'sparks', {
+        "percentChangeOfSparkOnMove" : 60,
+        "colours" : [ 'red', 'blue', 'green' ]
+      }); 
+      $('.eighth-row').StartShenanigans( 'sparks', {
+        "percentChangeOfSparkOnMove" : 60,
+        "colours" : [ 'white' ],
+        "frameDelay" : 30
       });  
+      $('.eighth-row').StartShenanigans( 'sparks', {
+        "percentChangeOfSparkOnMove" : 60,
+        "colours" : [ 'blue' ],
+        "frameDelay" : 90
+      });
+      $('.eighth-row').StartShenanigans( 'sparks', {
+        "percentChangeOfSparkOnMove" : 60,
+        "colours" : [ 'red' ],
+        "frameDelay" : 150
+      });
+      $('.eighth-row').StartShenanigans( 'sparks', {
+        "percentChangeOfSparkOnMove" : 60,
+        "colours" : [ 'green' ],
+        "frameDelay" : 200
+      });
 
       $('.default-row').StartShenanigans( 'iconTrail',
         { 
@@ -149,7 +189,9 @@
           'useFontAwesome' : true,
           'icon' : 'ghost',         // pick a different icon https://fontawesome.com/icons/shoe-prints?s=solid&f=classic
           'iconColour' : '#fff', // set the colour of the icon
-          'iconScale' : 0.5           // make it a bit bigger, bigger ghost is scarier
+          'iconScale' : 0.75,          // smaller ghost is scarier, harder to see!
+          'travelDistanceForNewIcon' : 10,  // make them come closer together
+          'makeIconDelay' : 5
         }
       );
       $('.third-row').StartShenanigans( 'iconTrail',

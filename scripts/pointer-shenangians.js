@@ -3,6 +3,8 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+var sparkInstances = 0; // ugh
+
 var PointerShenanigansSparks = function(parentContainer, settings) {
     var self = this;
 
@@ -12,17 +14,20 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
         makeSparkOnClick : true,
         makeSparkOnMove : true,
         percentChangeOfSparkOnMove : 20,
+        colours : [ 'white' ], //'red', 'blue', 'green', 'white'
     }
     self.settings = $.extend( {}, self.defaults, settings );
 
     self.sparkCounter = 0;
+    self.sparkInstance = 0;
 
     self.createSpark = function(x , y) {
         // we're going to rotate it randomly - the options are from 0 to 1 where 1 = 1 full rotation
         let rotation = randomIntFromInterval(1,100) / 100;
+        let colourIndex = randomIntFromInterval(0,self.settings.colours.length - 1);
         self.sparkCounter++;
         let newSparkCount = self.sparkCounter;
-        let elementId = 'spark'+newSparkCount;
+        let elementId = 'spark'+self.sparkInstance+"-"+newSparkCount;
         let newElement = $('<div>', {
             id : elementId,
             class: '',
@@ -34,7 +39,7 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
                 "height": '25px',
                 "position" : "absolute",
                 // "background-color": "black",
-                "background-image" : "url('images/spark-sprites-white.png')",
+                "background-image" : "url('images/spark-sprites-" + self.settings.colours[colourIndex] + ".png')",
                 "background-position-x" : 0,
                 "background-position-y" : 0,
                 "transform": "rotate("+ rotation +"turn)"
@@ -67,6 +72,17 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
 
     self.initialize = function() 
     {
+        console.log("start sparks")
+
+        // I want to put unique ids on each spark, but what if there are multiple instances of sparks happening
+        // man that sucks, our ids will clash. We're going to track each created instance
+        // kelvin is going to fix this by not passing the id around
+        if(!sparkInstances) {
+            sparkInstances = 0;
+        }
+        sparkInstances = sparkInstances + 1;
+        self.sparkInstance = sparkInstances;
+        
         if(self.settings.makeSparkOnClick) {
             // we're going to make a spark on mouse click
             $(self.parentContainer).click(function(event) {
