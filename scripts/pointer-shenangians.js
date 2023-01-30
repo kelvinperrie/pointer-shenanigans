@@ -13,17 +13,20 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
         makeSparkOnClick : true,
         makeSparkOnMove : true,
         percentChangeOfSparkOnMove : 20,
-        colours : [ 'white' ], //'red', 'blue', 'green', 'white'
+        colours : [ 'white' ], //'red', 'blue', 'green', 'white',
+        sparkSticksToMouse : false,
     }
     self.settings = $.extend( {}, self.defaults, settings );
 
+    self.sparkHalf = 25 / 2; // how big is half our spark picture - so we can center things
+
     self.createSpark = function(x , y) {
+        //console.log("creating a spark at "+x+","+y)
         // we're going to rotate it randomly - the options are from 0 to 1 where 1 = 1 full rotation
         let rotation = randomIntFromInterval(1,100) / 100;
         let colourIndex = randomIntFromInterval(0,self.settings.colours.length - 1);
-        self.sparkCounter++;
         let newElement = $('<div>', {
-            class: '',
+            class: self.settings.sparkSticksToMouse ? 'sparky-move-me' : '',
             'data-frame': '0',
             css: {
                 "top": y,
@@ -38,6 +41,11 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
                 "transform": "rotate("+ rotation +"turn)"
             }
         });
+        if(self.settings.sparkSticksToMouse) {
+            // this is going to cause some awesome performance issues when there's a lot of sparks
+            console.log("setting up mousemove for spark");
+
+        }
         $(self.parentContainer).append(newElement);
         setTimeout(function() { self.animateSpark(newElement) }, self.settings.frameDelay );
     }
@@ -59,7 +67,7 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
         x = ((nextFrame % 4)) * 25 * -1;    
         
         $(element).data("frame", nextFrame); // we store the current frame in the html
-        $(element).css({ "background-position" : x+"px "+y+"px" })
+        $(element).css({ "background-position" : (x - self.sparkHalf)+"px "+(y - self.sparkHalf)+"px" })
 
         setTimeout(function() { self.animateSpark(element) }, self.settings.frameDelay );
     }
@@ -76,11 +84,21 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
         if(self.settings.makeSparkOnMove) {
             // we're going to make a spark on mouse move
             $(self.parentContainer).mousemove(function(event) {
+                //console.log(self.parentContainer)
                 // we're only going to make the spark some of the time
                 // get a random number and see if it is below our threshold
                 let random = randomIntFromInterval(1,100);
                 if(random <= self.settings.percentChangeOfSparkOnMove) {
                     self.createSpark(event.pageX,event.pageY);
+                }
+
+                if(self.settings.sparkSticksToMouse) {
+                    $('html').find('.sparky-move-me').each(function( index, element ) {
+                        $(element).css({
+                            "top": (event.pageY - self.sparkHalf) + "px",
+                            "left": (event.pageX - self.sparkHalf) + "px",
+                        })
+                    });
                 }
             });
         }
@@ -124,6 +142,7 @@ var PointerShenanigansIconTrail = function(parentContainer, settings) {
                     $(self.parentContainer).append($('<div>', {
                         class: 'shen-icon fa-solid fa-'+self.settings.icon,
                         css: {
+                            "position" : "absolute",
                             "top": self.mousePosition.y,
                             "left": self.mousePosition.x,
                             "color" : self.settings.iconColour,
@@ -138,6 +157,7 @@ var PointerShenanigansIconTrail = function(parentContainer, settings) {
                         src: self.settings.icon,
                         alt: 'trail icon',
                         css: {
+                            "position" : "absolute",
                             "top": self.mousePosition.y,
                             "left": self.mousePosition.x,
                             "transform": "scale("+ self.settings.iconScale +")"

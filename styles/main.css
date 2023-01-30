@@ -1,8 +1,4 @@
 
-/* needed for the pointer animations to work */
-.shen-icon {
-  position: absolute; /* just stick this on the element! */
-}
 
 
 /* this is just stuff to make our particular page look better */
@@ -16,7 +12,7 @@
   background-color: cornsilk;
 }
 
-.second-row, .fifth-row, .sixth-row, .eighth-row {
+.second-row, .fifth-row, .fifthish-row, .sixth-row, .eighth-row {
   background-color: black;
   color: #fff;
 }

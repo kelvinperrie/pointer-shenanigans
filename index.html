@@ -116,6 +116,14 @@
             </p>
           </div>
         </div>
+        <div class="row fifthish-row">
+          <div class="col">
+            <p>
+              Whatever the default is but stick the spark to the cursor
+              <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </p>
+          </div>
+        </div>
         <div class="row sixth-row">
           <div class="col">
             <p>
@@ -146,6 +154,10 @@
     <script>
 
       $('.fifth-row').StartShenanigans( 'sparks');
+      $('.fifthish-row').StartShenanigans( 'sparks', {
+        "sparkSticksToMouse" : true,
+        "percentChangeOfSparkOnMove" : 10
+      });
       $('.sixth-row').StartShenanigans( 'sparks', {
         "percentChangeOfSparkOnMove" : 100
       });
