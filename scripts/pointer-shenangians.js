@@ -3,6 +3,115 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+var PointerShenanigansCrapFireworks = function(parentContainer, settings) {
+    var self = this;
+
+    self.parentContainer = parentContainer; // the element we are applying the animations too
+    self.defaults = {
+        makeFireworksOnClick : true,
+        makeFireworksOnMove : true,
+        percentChanceOfFireworkOnMove : 10,
+        widthDecrement : 2,
+        fadeDelay : 50,
+    }
+    self.settings = $.extend( {}, self.defaults, settings );
+
+    self.mousePosition = { x: null, y: null };
+    self.lastRotation = 0;
+
+    self.getNewRotation = function() {
+        let newRotation = self.lastRotation + 0.025;
+        if(newRotation >= 1)
+            newRotation = 0;
+        self.lastRotation = newRotation;
+        return newRotation;
+    }
+
+    self.createFirework = function(x,y) {
+        if(!x || !y) return;
+        let newRotation = self.getNewRotation();
+        let newElement = $('<div>', {
+            class: 'shrinking-laser',
+            css: {
+                "top": y,
+                "left": x,
+                "width": '1px',
+                "height": '50px',
+                "position" : "absolute",
+                "background-color": "blue",
+                "transform-origin": "0 0",  // rotate from the top corner
+                "transform": "rotate("+newRotation+"turn)",
+                "pointer-events": "none",
+                // "background-image" : "url('images/spark-sprites-" + self.settings.colours[colourIndex] + ".png')",
+                // "background-position-x" : 0,
+                // "background-position-y" : 0,
+                // "transform": "rotate("+ rotation +"turn)"
+            }
+        });
+        $(self.parentContainer).append(newElement);
+    };
+
+    self.creationLoop = function() {
+        self.createFirework(self.mousePosition.x,self.mousePosition.y);
+        setTimeout(function() {
+            self.creationLoop();
+        }, 20);
+    };
+    self.creationLoop();
+    
+    self.animate = function() {
+
+            $(self.parentContainer).find(".shrinking-laser").each(function( index, element ) {
+
+                let currentWidth = $(element).height();
+                currentWidth -= self.settings.widthDecrement;
+                // if you can't see the element anymore then remove the element from the html
+                if(currentWidth <= 0) {
+                    $(this).remove();
+                } else {
+                    $(element).height(currentWidth);
+                }
+            });
+        
+            setTimeout(function() {
+                self.animate();
+            }, self.settings.fadeDelay);
+    };
+    self.animate();
+
+    self.initialize = function() 
+    {
+        
+        if(self.settings.makeFireworksOnClick) {
+            // we're going to make a spark on mouse click
+            $(self.parentContainer).click(function(event) {
+                self.createFirework(event.pageX,event.pageY);
+            });
+        }
+        if(self.settings.makeFireworksOnMove) {
+            // we're going to make a spark on mouse move
+            $(self.parentContainer).mousemove(function(event) {
+                //console.log(self.parentContainer)
+                // we're only going to make the spark some of the time
+                // get a random number and see if it is below our threshold
+                // let random = randomIntFromInterval(1,100);
+                // if(random <= self.settings.percentChanceOfFireworkOnMove) {
+                //     self.createFirework(event.pageX,event.pageY);
+                // }
+                self.mousePosition.x = event.pageX;
+                self.mousePosition.y = event.pageY;
+
+                $('html').find('.shrinking-laser').each(function( index, element ) {
+                    $(element).css({
+                        "top": (event.pageY) + "px",
+                        "left": (event.pageX) + "px",
+                    })
+                });
+            });
+        }
+    }
+    self.initialize();
+};
 
 var PointerShenanigansSparks = function(parentContainer, settings) {
     var self = this;
@@ -12,7 +121,7 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
         frameDelay : 30,                    // essentially how fast the animation runs
         makeSparkOnClick : true,
         makeSparkOnMove : true,
-        percentChangeOfSparkOnMove : 20,
+        percentChangeOfSparkOnMove : 20,    // spelt this wrong and never noticed
         colours : [ 'white' ], //'red', 'blue', 'green', 'white',
         sparkSticksToMouse : false,
     }
@@ -225,7 +334,9 @@ $.fn.StartShenanigans = function(pointerType, settings) {
     if(pointerType === 'iconTrail') {
         new PointerShenanigansIconTrail($(this),settings);
     } else if (pointerType === 'sparks') {
-        new PointerShenanigansSparks($(this),settings);
+        new PointerShenanigansSparks($(this),settings); 
+    } else if (pointerType === 'crapFireworks') {
+        new PointerShenanigansCrapFireworks($(this),settings);
     } else {
         console.log("mate, I dunno what " + pointerType + " is.");
     }
