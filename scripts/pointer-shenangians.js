@@ -3,7 +3,6 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-var sparkInstances = 0; // ugh
 
 var PointerShenanigansSparks = function(parentContainer, settings) {
     var self = this;
@@ -18,18 +17,12 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
     }
     self.settings = $.extend( {}, self.defaults, settings );
 
-    self.sparkCounter = 0;
-    self.sparkInstance = 0;
-
     self.createSpark = function(x , y) {
         // we're going to rotate it randomly - the options are from 0 to 1 where 1 = 1 full rotation
         let rotation = randomIntFromInterval(1,100) / 100;
         let colourIndex = randomIntFromInterval(0,self.settings.colours.length - 1);
         self.sparkCounter++;
-        let newSparkCount = self.sparkCounter;
-        let elementId = 'spark'+self.sparkInstance+"-"+newSparkCount;
         let newElement = $('<div>', {
-            id : elementId,
             class: '',
             'data-frame': '0',
             css: {
@@ -46,16 +39,17 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
             }
         });
         $(self.parentContainer).append(newElement);
-        setTimeout(function() { self.animateSpark(elementId) }, self.settings.frameDelay );
+        setTimeout(function() { self.animateSpark(newElement) }, self.settings.frameDelay );
     }
     
 
-    self.animateSpark = function(elementId) {
-        let currentFrame = $("#"+elementId).data("frame");
+    self.animateSpark = function(element) {
+        
+        let currentFrame = $(element).data("frame");
         let nextFrame = currentFrame+1;
         // if we've past the last frame then delete the element
         if(nextFrame >= 8) {
-            $("#"+elementId).remove();
+            $(element).remove();
             return;
         }
         // our spark animation is on a sprite sheet, so we have to figure out which sprite on the sheet to
@@ -64,24 +58,14 @@ var PointerShenanigansSparks = function(parentContainer, settings) {
         if(nextFrame > 3) y = 25 * -1;      // lazy but true. If you're on the 4th frame it's the second row.
         x = ((nextFrame % 4)) * 25 * -1;    
         
-        $("#"+elementId).data("frame", nextFrame); // we store the current frame in the html
-        $("#"+elementId).css({ "background-position" : x+"px "+y+"px" })
+        $(element).data("frame", nextFrame); // we store the current frame in the html
+        $(element).css({ "background-position" : x+"px "+y+"px" })
 
-        setTimeout(function() { self.animateSpark(elementId) }, self.settings.frameDelay );
+        setTimeout(function() { self.animateSpark(element) }, self.settings.frameDelay );
     }
 
     self.initialize = function() 
     {
-        console.log("start sparks")
-
-        // I want to put unique ids on each spark, but what if there are multiple instances of sparks happening
-        // man that sucks, our ids will clash. We're going to track each created instance
-        // kelvin is going to fix this by not passing the id around
-        if(!sparkInstances) {
-            sparkInstances = 0;
-        }
-        sparkInstances = sparkInstances + 1;
-        self.sparkInstance = sparkInstances;
         
         if(self.settings.makeSparkOnClick) {
             // we're going to make a spark on mouse click
