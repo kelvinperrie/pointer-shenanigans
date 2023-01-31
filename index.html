@@ -11,10 +11,14 @@
   </head>
   <body>
     <div class="container">
-        <div class="row text-trails-row">
-          This should write some text I guess
-          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-        </div>
+      <div class="row text-trails-row-1">
+        This should write some text I guess. Defaults.
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      </div>
+      <div class="row text-trails-row-2">
+        Change some options.
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      </div>
         <div class="row default-row">
             <div class="col">
               <p>
@@ -165,7 +169,13 @@
     <script src="scripts/pointer-shenangians.js"></script>
     <script>
       
-      $(".text-trails-row").StartShenanigans("textTrail");
+      $(".text-trails-row-1").StartShenanigans("textTrail");
+      $(".text-trails-row-2").StartShenanigans("textTrail", {
+        "style" : "color: #830000; font-size: 1.1em;",
+        "fadeText" : false,
+        "repeatText" : false,
+        "textToDisplay" : "Welcome to the grungle.   ",
+      });
 
       $('.ninth-row').StartShenanigans('crapFireworks');
 

@@ -10,8 +10,16 @@ function calculateDistanceBetweenPoints(p1, p2) {
     return hyp;
 }
 
+
 var PointerShenanigansTextTrail = function(parentContainer, settings) {
     var self = this;
+
+    // we want to know how many instances of this have been created so we can generate unique ids/classes
+    if (typeof textTrailCounter === 'undefined' || textTrailCounter === null) {
+        textTrailCounter = 0;
+    }
+    textTrailCounter+=1;
+    self.instanceIndex = textTrailCounter;
 
     self.parentContainer = parentContainer; // the element we are applying the animations too
     self.defaults = {
@@ -22,7 +30,7 @@ var PointerShenanigansTextTrail = function(parentContainer, settings) {
         fadeText : true,                            // fade the text from the page of leave it there forever (lol)
         animationDelay : 200,                       // controls how fast our animation loop runs
         opacityIncrement: 0.025,                    // how much opacity we take off at each animation loop when fading letters
-        style: "color: #830000; font-size: 1.1em;", // any thing put in there will just be dumped on the letter as style
+        style: "",                                  // any thing put in there will just be dumped on the letter as style
         containingElement: "body"                   // the element we are going to put our new elements in
     }
     self.settings = $.extend( {}, self.defaults, settings );
@@ -53,7 +61,7 @@ var PointerShenanigansTextTrail = function(parentContainer, settings) {
 
     self.animationLoop = function() {
         // fade out the elements containing our text trails
-        $(self.settings.containingElement).find(".text-trail").each(function( index, element ) {
+        $(self.settings.containingElement).find(".text-trail-" + self.instanceIndex).each(function( index, element ) {
             let currentOpacity = $(element).css("opacity");
             currentOpacity -= self.settings.opacityIncrement;
             // if you can't see the element anymore then remove the element from the html
@@ -81,7 +89,7 @@ var PointerShenanigansTextTrail = function(parentContainer, settings) {
         }
         if(!x || !y) return;
         let newElement = $('<div>', {
-            class: 'text-trail',
+            class: 'text-trail-' + self.instanceIndex,
             text: letter,
             style : self.settings.style,
             css: {
