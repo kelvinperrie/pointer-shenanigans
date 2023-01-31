@@ -2,6 +2,109 @@
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
+function calculateDistanceBetweenPoints(p1, p2) {
+    let x = p1.x - p2.x;
+    let y = p1.y - p2.y;
+
+    let hyp = Math.sqrt( x*x + y*y );
+    return hyp;
+}
+
+var PointerShenanigansTextTrail = function(parentContainer, settings) {
+    var self = this;
+
+    self.parentContainer = parentContainer; // the element we are applying the animations too
+    self.defaults = {
+        textToDisplay : "The 90s called, they want their cursor animations back.      ", // the text to output - just pad it with some spaces if you want a delay before it repeats
+        makeLetterDelay : 50,                       // how often we should check to see if we should output a new letter
+        travelDistanceForOutput : 15,               // the minimum gap from the last letter before we output another
+        repeatText : true,                          // do we say the text over and over or just once
+        fadeText : true,                            // fade the text from the page of leave it there forever (lol)
+        animationDelay : 200,                       // controls how fast our animation loop runs
+        opacityIncrement: 0.025,                    // how much opacity we take off at each animation loop when fading letters
+        style: "color: #830000; font-size: 1.1em;", // any thing put in there will just be dumped on the letter as style
+        containingElement: "body"                   // the element we are going to put our new elements in
+    }
+    self.settings = $.extend( {}, self.defaults, settings );
+    self.currentLetterIndex = 0;                        // the index of the letter we are displaying from the self.settings.textToDisplay
+    self.mousePosition = { x: null, y: null };          // the x,y of the mouseposition
+    self.lastCreationPosition = { x: null, y: null };   // the x,y of where we last output something
+    self.completedTimes = 0;                            // tracks how many times we have output the entire text
+
+    self.maybeOutputLetter = function() {
+        if(self.mousePosition.x || self.mousePosition.y) {
+
+            // how far have we moved since the last output; only output more if it is over a certain threshold
+            var distance = calculateDistanceBetweenPoints(self.mousePosition, self.lastCreationPosition);
+            if(distance > self.settings.travelDistanceForOutput) {
+                // make a new letter please
+                self.outputLetter(self.mousePosition.x, self.mousePosition.y);
+                self.lastCreationPosition.x = self.mousePosition.x;
+                self.lastCreationPosition.y = self.mousePosition.y;
+            }
+        }
+        // if we have completed the text, and they don't want to show it again then just end
+        if(!self.settings.repeatText && self.completedTimes > 0) {
+            return;
+        }
+        setTimeout(self.maybeOutputLetter, self.settings.makeLetterDelay);
+    }
+    self.maybeOutputLetter();
+
+    self.animationLoop = function() {
+        // fade out the elements containing our text trails
+        $(self.settings.containingElement).find(".text-trail").each(function( index, element ) {
+            let currentOpacity = $(element).css("opacity");
+            currentOpacity -= self.settings.opacityIncrement;
+            // if you can't see the element anymore then remove the element from the html
+            if(currentOpacity <= 0) {
+                $(this).remove();
+            } else {
+                $(element).css({
+                    "opacity": currentOpacity
+                });
+            }
+        });
+        setTimeout(self.animationLoop, self.settings.animationDelay);
+    }
+    // only do the animation loop if we are fading the text
+    if(self.settings.fadeText) {
+        self.animationLoop();
+    }
+
+    self.outputLetter = function(x,y) {
+        let letter = self.settings.textToDisplay.substring(self.currentLetterIndex,self.currentLetterIndex+1);
+        self.currentLetterIndex+=1;
+        if(self.currentLetterIndex>=self.settings.textToDisplay.length-1) {
+            self.currentLetterIndex=0;
+            self.completedTimes+=1;
+        }
+        if(!x || !y) return;
+        let newElement = $('<div>', {
+            class: 'text-trail',
+            text: letter,
+            style : self.settings.style,
+            css: {
+                "top": y,
+                "left": x,
+                "position" : "absolute",
+            }
+        });
+        $(self.settings.containingElement).append(newElement);
+    };
+
+    self.initialize = function() {
+        // we want to know where the mouse is so we can potentially put text at that location
+        $(self.parentContainer).mousemove(function(event) {
+            self.mousePosition.x = event.pageX;
+            self.mousePosition.y = event.pageY;
+        });
+
+    };
+    self.initialize();
+
+
+}
 
 var PointerShenanigansCrapFireworks = function(parentContainer, settings) {
     var self = this;
@@ -242,7 +345,7 @@ var PointerShenanigansIconTrail = function(parentContainer, settings) {
         if(self.mousePosition.x || self.mousePosition.y) {
 
             // how far have we moved since the last icon creations; only create another one if it is over a certain threshold
-            var distance = self.calculateDistanceBetweenPoints(self.mousePosition, self.lastCreationPosition);
+            var distance = calculateDistanceBetweenPoints(self.mousePosition, self.lastCreationPosition);
             if(distance > self.settings.travelDistanceForNewIcon) {
 
                 // <i class="fa-solid fa-bicycle"></i>
@@ -282,13 +385,6 @@ var PointerShenanigansIconTrail = function(parentContainer, settings) {
     }
     self.makeIcon();
 
-    self.calculateDistanceBetweenPoints = function(p1, p2) {
-        let x = p1.x - p2.x;
-        let y = p1.y - p2.y;
-
-        let hyp = Math.sqrt( x*x + y*y );
-        return hyp;
-    }
 
     // does the animation required by the specific loader
     self.animate = function() {
@@ -337,6 +433,8 @@ $.fn.StartShenanigans = function(pointerType, settings) {
         new PointerShenanigansSparks($(this),settings); 
     } else if (pointerType === 'crapFireworks') {
         new PointerShenanigansCrapFireworks($(this),settings);
+    } else if (pointerType === 'textTrail') {
+        new PointerShenanigansTextTrail($(this),settings);
     } else {
         console.log("mate, I dunno what " + pointerType + " is.");
     }

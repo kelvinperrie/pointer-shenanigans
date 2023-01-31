@@ -11,6 +11,10 @@
   </head>
   <body>
     <div class="container">
+        <div class="row text-trails-row">
+          This should write some text I guess
+          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        </div>
         <div class="row default-row">
             <div class="col">
               <p>
@@ -161,6 +165,8 @@
     <script src="scripts/pointer-shenangians.js"></script>
     <script>
       
+      $(".text-trails-row").StartShenanigans("textTrail");
+
       $('.ninth-row').StartShenanigans('crapFireworks');
 
       $('.fifth-row').StartShenanigans( 'sparks');
