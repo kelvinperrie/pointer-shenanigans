@@ -11,33 +11,50 @@
   </head>
   <body>
     <div class="container">
+      <div class="row intro-row">
+        <p>
+          <h2>The plan is to make some pointer animation things just like we use to have on the Internet in the good old days</h2>
+
+          possible options:
+
+          <ul>
+            <li>When the mouse moves a trail of icons follows it. They can fade? They can stay?</li>
+            <li>When the mouse moves it outputs a trail of text</li> 
+            <li>Can we make the cursor leave sparks behind it?</li>
+            <li>How about an image or animation that follows the cursor</li>
+          </ul>
+
+        </p>
+      </div>
       <div class="row text-trails-row-1">
-        This should write some text I guess. Defaults.
-        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        This one is a text trail. Just whatever the defaults are.
+        <pre>
+          $(".text-trails-row-1").StartShenanigans("textTrail");
+        </pre>
+        <br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/>
       </div>
       <div class="row text-trails-row-2">
-        Change some options.
+        This is another text trail, give it some styling, set the text, only output it just the once, don't let it fade so it stays forever
+        <pre>
+          $(".text-trails-row-2").StartShenanigans("textTrail", {
+            "style" : "color: #830000; font-size: 1.1em;",
+            "fadeText" : false,
+            "repeatText" : false,
+            "textToDisplay" : "Welcome to the grungle.   ",
+          });
+        </pre>
         <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
       </div>
         <div class="row default-row">
             <div class="col">
+
               <p>
-                <h2>Alright, the plan is to make some pointer animation things just like we use to have on the Internet in the good old days</h2>
-                <ol>
-                  <li>When the mouse moves we want to put out a trail of garbage aka icons. I guess they will fade over time??? If they stayed that would be both cool and make the document unreadable.</li>
-                  <li>I like the skull because it is very spooky</li>
-                  <li>We have put the font awesome webfonts and css on the page.</li>
-                  <li>In theory we can have options to change the icon and the colour and the fade speed.</li>
-                  <li>We need a jquery function to add the pointer animation to the page. Or whatever element. You could add it to the html element, then the icons elements are going to be created outside of the body of the page (ruh roh). Potentially you could add different animations (icons/colours) to different elements on the page??!? We're unstoppable.</li>
-                  <li>It is a bit of a pain having to have all the fontawesome stuff though. A user has to add the fontawesome css, put the webfonts in the right locations, and add our js. That sucks.</li>
-                </ol>
-              </p>
-              <p>
-                This chunk of text just has the defaults applied to it. All you have to do is pass in an image like this spooky ghost <img src="images/mystery.png" alt="ghosty image" />
+                This is the icon trail. All you have to do is pass in an image like this spooky ghost <img src="images/mystery.png" alt="ghosty image" />
               </p>
               <p>
                 <pre>
-                  $('.default-row').StartShenanigans( 
+                  $('.default-row').StartShenanigans( 'iconTrail',
                     { 
                       'icon' : 'images/mystery.png'
                     }
@@ -49,11 +66,11 @@
         <div class="row first-row">
           <div class="col">
             <p>
-              For this area we are going to use the fontawesome library to provide the image - our default is the skull
+              Also icon trail. For this area we are going to use the fontawesome library to provide the image - our default is the skull
             </p>
             <p>
               <pre>
-                $('.first-row').StartShenanigans( 
+                $('.first-row').StartShenanigans( 'iconTrail',
                   {
                     'useFontAwesome' : true, // use fontawesome icons - the default is 'skull'
                   }
@@ -65,16 +82,20 @@
         <div class="row second-row">
           <div class="col">
             <p>
-              For this area we area going to apply these values
+              Also icon trail, set some options.
             </p>
             <p>
               <pre>
-                $('.second-row').StartShenanigans( 
-                  { 
-                    'icon' : 'hippo', // pick a different icon https://fontawesome.com/icons/shoe-prints?s=solid&f=classic
-                    'iconColour' : '#ff0000' // set the colour of the icon
-                  }
-                );
+                $('.second-row').StartShenanigans( 'iconTrail',
+                { 
+                  'useFontAwesome' : true,
+                  'icon' : 'ghost',         // pick a different icon 
+                  'iconColour' : '#fff', // set the colour of the icon
+                  'iconScale' : 0.75,          // smaller ghost is scarier, harder to see!
+                  'travelDistanceForNewIcon' : 10,  // make them come closer together
+                  'makeIconDelay' : 5
+                }
+              );
               </pre>
             </p>
           </div>
@@ -82,18 +103,21 @@
         <div class="row third-row">
           <div class="col">
             <p>
-              For this area we area going to apply these values
+              Also icon trail, set some different options.
             </p>
             <p>
               <pre>
-                $('.third-row').StartShenanigans( 
-                  { 
-                    'icon' : 'bomb',
-                    'travelDistanceForNewIcon' : 50,  // space them out
-                    'opacityIncrement': 0.05, // really slow fade
-                    'fadeDelay': 100, // really slow fade
-                  }
-                );
+
+                $('.third-row').StartShenanigans( 'iconTrail',
+                { 
+                  'useFontAwesome' : true,
+                  'icon' : 'bomb',
+                  'travelDistanceForNewIcon' : 15,  // make them come closer together
+                  'opacityIncrement': 0.05, // really slow fade
+                  'fadeDelay': 100, // really slow fade
+                  'makeIconDelay' : 20
+                }
+              );
               </pre>
             </p>
           </div>
@@ -101,17 +125,18 @@
         <div class="row forth-row">
           <div class="col">
             <p>
-              For this area we area going to apply these values
+              Icon trail, don't fade the icons
             </p>
             <p>
               <pre>
-                $('.forth-row').StartShenanigans( 
-                  { 
-                    'icon' : 'shoe-prints',
-                    'iconColour' : '#FF0090',
-                    'fadeIconEnabled' : false, // don't fade out the icons
-                  }
-                );
+                $('.forth-row').StartShenanigans('iconTrail',
+                { 
+                  'useFontAwesome' : true,
+                  'icon' : 'shoe-prints',
+                  'iconColour' : '#6fa36e',
+                  'fadeIconEnabled' : false, // don't fade out the icons
+                }
+              );
               </pre>
             </p>
           </div>
@@ -119,7 +144,10 @@
         <div class="row fifth-row">
           <div class="col">
             <p>
-              This one just does a few sparks. Whatever the default is.
+              This one is the sparks animation. Whatever the default is.
+              <pre>
+                $('.fifth-row').StartShenanigans( 'sparks');
+              </pre>
               <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </p>
           </div>
@@ -127,7 +155,13 @@
         <div class="row fifthish-row">
           <div class="col">
             <p>
-              Whatever the default is but stick the spark to the cursor
+              This will try to stick the sparks to the cursor
+              <pre>
+                $('.fifthish-row').StartShenanigans( 'sparks', {
+                  "sparkSticksToMouse" : true,
+                  "percentChangeOfSparkOnMove" : 10
+                });
+              </pre>
               <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </p>
           </div>
@@ -136,6 +170,11 @@
           <div class="col">
             <p>
               This one is HARDCORE sparks.
+              <pre>
+                $('.sixth-row').StartShenanigans( 'sparks', {
+                  "percentChangeOfSparkOnMove" : 100
+                });
+              </pre>
               <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </p>
           </div>
@@ -143,7 +182,13 @@
         <div class="row seventh-row">
           <div class="col">
             <p>
-              This one does lots of colours.
+              Sparks again, but this one does lots of colours.
+              <pre>
+                $('.seventh-row').StartShenanigans( 'sparks', {
+                  "percentChangeOfSparkOnMove" : 60,
+                  "colours" : [ 'red', 'blue', 'green' ]
+                }); 
+              </pre>
               <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </p>
           </div>
@@ -152,6 +197,28 @@
           <div class="col">
             <p>
               What happens if you do more than one at once, some with slowed down animations?
+              <pre>
+                $('.eighth-row').StartShenanigans( 'sparks', {
+                  "percentChangeOfSparkOnMove" : 60,
+                  "colours" : [ 'white' ],
+                  "frameDelay" : 30
+                });  
+                $('.eighth-row').StartShenanigans( 'sparks', {
+                  "percentChangeOfSparkOnMove" : 60,
+                  "colours" : [ 'blue' ],
+                  "frameDelay" : 90
+                });
+                $('.eighth-row').StartShenanigans( 'sparks', {
+                  "percentChangeOfSparkOnMove" : 60,
+                  "colours" : [ 'red' ],
+                  "frameDelay" : 150
+                });
+                $('.eighth-row').StartShenanigans( 'sparks', {
+                  "percentChangeOfSparkOnMove" : 60,
+                  "colours" : [ 'green' ],
+                  "frameDelay" : 200
+                });
+              </pre>
               <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </p>
           </div>
@@ -159,7 +226,7 @@
         <div class="row ninth-row">
           <div class="col">
             <p>
-              Whatsdffffffffffffffffffffffffffff
+              I'm not sure what is going on here
               <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </p>
           </div>
