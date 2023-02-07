@@ -26,8 +26,16 @@
 
         </p>
       </div>
+      <div class="following-image-row-1">
+        This one is an image that follows the cursor. Just whatever the defaults are.
+        <pre>
+          put code here
+        </pre>
+        <br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/>
+      </div>
       <div class="row text-trails-row-1">
-        This one is a text trail. Just whatever the defaults are.
+        This one will cause the cursor to leave a trail of text behind it. Just whatever the defaults are.
         <pre>
           $(".text-trails-row-1").StartShenanigans("textTrail");
         </pre>
@@ -236,6 +244,10 @@
     <script src="scripts/pointer-shenangians.js"></script>
     <script>
       
+
+      $(".following-image-row-1").StartShenanigans("followingImage")
+
+
       $(".text-trails-row-1").StartShenanigans("textTrail");
       $(".text-trails-row-2").StartShenanigans("textTrail", {
         "style" : "color: #830000; font-size: 1.1em;",

@@ -10,6 +10,67 @@ function calculateDistanceBetweenPoints(p1, p2) {
     return hyp;
 }
 
+var PointerShenanigansFollowingImage = function(parentContainer, settings) {
+    var self = this;
+
+    // // we want to know how many instances of this have been created so we can generate unique ids/classes
+    // if (typeof textTrailCounter === 'undefined' || textTrailCounter === null) {
+    //     textTrailCounter = 0;
+    // }
+    // textTrailCounter+=1;
+    // self.instanceIndex = textTrailCounter;
+
+    self.parentContainer = parentContainer; // the element we are applying the animations too
+    self.defaults = {
+        image: 'images/mystery.png',                // the image that follows the cursor
+        containingElement: "body",                  // the element we are going to put our new elements in
+        animationDelay: 100,                        // how long we wait before redoing our animation loop
+    }
+    self.settings = $.extend( {}, self.defaults, settings );
+    self.mousePosition = { x: null, y: null };          // the x,y of the mouseposition
+
+    self.updateImagePositionLoop = function() {
+
+        if(self.mousePosition.x && self.mousePosition.y){
+
+            $(self.settings.containingElement).find(".following-image").each(function(index, element) {
+                $(element).css({
+                    "transform": "translate("+self.mousePosition.x+"px, "+self.mousePosition.y+"px)"
+                });
+            });
+        }
+        setTimeout(self.updateImagePositionLoop, self.settings.animationDelay);
+    }
+    self.updateImagePositionLoop();
+
+    self.addImageToPage = function() {
+        $(self.settings.containingElement).append($('<img/>', {
+            class: 'following-image',
+            src: self.settings.image,
+            alt: 'image the follows the cursor',
+            css: {
+                "position" : "absolute",
+                "top": 0,
+                "left": 0,
+                "transition-duration": "1s",
+                "transition-delay": "0s",
+                "transition-timing-function": "linear",
+            }
+        }));
+    };
+
+    self.initialize = function() {
+        // we want to know where the mouse is so we can potentially put text at that location
+        $(self.parentContainer).mousemove(function(event) {
+            self.mousePosition.x = event.pageX;
+            self.mousePosition.y = event.pageY;
+        });
+        self.addImageToPage();
+    };
+    self.initialize();
+
+
+}
 
 var PointerShenanigansTextTrail = function(parentContainer, settings) {
     var self = this;
@@ -443,6 +504,8 @@ $.fn.StartShenanigans = function(pointerType, settings) {
         new PointerShenanigansCrapFireworks($(this),settings);
     } else if (pointerType === 'textTrail') {
         new PointerShenanigansTextTrail($(this),settings);
+    } else if (pointerType === 'followingImage') {
+        new PointerShenanigansFollowingImage($(this),settings);
     } else {
         console.log("mate, I dunno what " + pointerType + " is.");
     }
