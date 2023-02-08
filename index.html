@@ -27,9 +27,20 @@
         </p>
       </div>
       <div class="following-image-row-1">
-        This one is an image that follows the cursor. Just whatever the defaults are.
+        This one is an image that follows the cursor. Just whatever the defaults are. The default image is of course the head of the legendary Macho Man Randy Savage.
+        <br/><br/>
+        If I get around to it I will standardise the speed it travels at.
         <pre>
-          put code here
+          $(".following-image-row-1").StartShenanigans("followingImage")
+        </pre>
+        <br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/>
+      </div>
+      <div class="following-image-row-2">
+        This one is the same as the above, an image that follows the cursor, but you can change image. I have used an image that could be a ufo or it could be a donut.
+        <br/><br/>
+        <pre>
+          $(".following-image-row-2").StartShenanigans("followingImage", { image : "images/ufo-or-donut.png" })
         </pre>
         <br/><br/><br/><br/><br/>
         <br/><br/><br/><br/><br/><br/>
@@ -246,6 +257,7 @@
       
 
       $(".following-image-row-1").StartShenanigans("followingImage")
+      $(".following-image-row-2").StartShenanigans("followingImage", { image : "images/ufo-or-donut.png" })
 
 
       $(".text-trails-row-1").StartShenanigans("textTrail");

@@ -13,16 +13,17 @@ function calculateDistanceBetweenPoints(p1, p2) {
 var PointerShenanigansFollowingImage = function(parentContainer, settings) {
     var self = this;
 
-    // // we want to know how many instances of this have been created so we can generate unique ids/classes
-    // if (typeof textTrailCounter === 'undefined' || textTrailCounter === null) {
-    //     textTrailCounter = 0;
-    // }
-    // textTrailCounter+=1;
-    // self.instanceIndex = textTrailCounter;
+    // we want to know how many instances of this have been created so we can generate unique ids/classes
+    if (typeof followingImageCounter === 'undefined' || followingImageCounter === null) {
+        followingImageCounter = 0;
+    }
+    followingImageCounter+=1;
+    self.instanceIndex = followingImageCounter;
+    self.elementId = 'following-image-'+self.instanceIndex;
 
     self.parentContainer = parentContainer; // the element we are applying the animations too
     self.defaults = {
-        image: 'images/mystery.png',                // the image that follows the cursor
+        image: 'images/randysavage.png',                // the image that follows the cursor
         containingElement: "body",                  // the element we are going to put our new elements in
         animationDelay: 100,                        // how long we wait before redoing our animation loop
     }
@@ -33,10 +34,8 @@ var PointerShenanigansFollowingImage = function(parentContainer, settings) {
 
         if(self.mousePosition.x && self.mousePosition.y){
 
-            $(self.settings.containingElement).find(".following-image").each(function(index, element) {
-                $(element).css({
-                    "transform": "translate("+self.mousePosition.x+"px, "+self.mousePosition.y+"px)"
-                });
+            $("#"+self.elementId).css({
+                "transform": "translate("+self.mousePosition.x+"px, "+self.mousePosition.y+"px)"
             });
         }
         setTimeout(self.updateImagePositionLoop, self.settings.animationDelay);
@@ -44,8 +43,13 @@ var PointerShenanigansFollowingImage = function(parentContainer, settings) {
     self.updateImagePositionLoop();
 
     self.addImageToPage = function() {
+
+        var x = $(self.parentContainer).offset().left;
+        var y = $(self.parentContainer).offset().top;
+
         $(self.settings.containingElement).append($('<img/>', {
             class: 'following-image',
+            id: self.elementId,
             src: self.settings.image,
             alt: 'image the follows the cursor',
             css: {
@@ -55,6 +59,7 @@ var PointerShenanigansFollowingImage = function(parentContainer, settings) {
                 "transition-duration": "1s",
                 "transition-delay": "0s",
                 "transition-timing-function": "linear",
+                "transform": "translate("+ x+"px, "+ y+"px)"
             }
         }));
     };
