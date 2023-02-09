@@ -45,6 +45,17 @@
         <br/><br/><br/><br/><br/>
         <br/><br/><br/><br/><br/><br/>
       </div>
+      <div class="flying-image-row-1">
+        This is an image that flies at the cursor. The image needs to start facing to the left. 
+        It can fly over the whole page, but is only listening to mouse events in the container it is put in (e.g. the below is '.flying-image-row-1'), so if the mouse 
+        moves outside that container then it will stop following the mouse and instead go to the last known position
+        <br/><br/>
+        <pre>
+          $('.flying-image-row-1').StartShenanigans("flyingImage");
+        </pre>
+        <br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/>
+      </div>
       <div class="row text-trails-row-1">
         This one will cause the cursor to leave a trail of text behind it. Just whatever the defaults are.
         <pre>
@@ -259,6 +270,7 @@
       $(".following-image-row-1").StartShenanigans("followingImage")
       $(".following-image-row-2").StartShenanigans("followingImage", { image : "images/ufo-or-donut.png" })
 
+      $('.flying-image-row-1').StartShenanigans("flyingImage");
 
       $(".text-trails-row-1").StartShenanigans("textTrail");
       $(".text-trails-row-2").StartShenanigans("textTrail", {

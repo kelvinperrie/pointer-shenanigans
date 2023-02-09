@@ -10,6 +10,157 @@ function calculateDistanceBetweenPoints(p1, p2) {
     return hyp;
 }
 
+function getAngle(targetA, sourceA) {
+    var a = targetA - sourceA;
+    a += (a > 180) ? -360 : (a < -180) ? 360 : 0;
+    return a;
+}
+function angle(cx, cy, ex, ey) {
+    var dy = ey - cy;
+    var dx = ex - cx;
+    var theta = Math.atan2(dy, dx); // range (-PI, PI]
+    theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
+    //if (theta < 0) theta = 360 + theta; // range [0, 360)
+    return theta;
+}
+
+var PointerShenanigansFlyingImage = function(parentContainer, settings) {
+    var self = this;
+
+    // we want to know how many instances of this have been created so we can generate unique ids/classes
+    if (typeof flyingImageCounter === 'undefined' || flyingImageCounter === null) {
+        flyingImageCounter = 0;
+    }
+    flyingImageCounter+=1;
+    self.instanceIndex = flyingImageCounter;
+    self.elementId = 'flying-image-'+self.instanceIndex;
+
+    self.parentContainer = parentContainer; // the element we are applying the animations too
+    self.defaults = {
+        image: '',                                  // the image that does the flying
+        plane: 3,                                   // the default plane to use; there are three!
+        containingElement: "body",                  // the element we are going to put our new elements in
+        animationDelay: 100,                        // how long we wait before redoing our animation loop
+    }
+    self.settings = $.extend( {}, self.defaults, settings );
+    self.mousePosition = { x: null, y: null };          // the x,y of the mouseposition
+    self.delay = 50;
+
+    // plane settings
+    self.currentAngle = 0;
+    self.currentSpeed = 50;
+    self.turnIteration = 5;
+    self.currentLocation = { x: 100, y: 900 };
+
+    self.addImageToPage = function() {
+
+        // this is an attempt to start the image in the top left of the parent container
+        var x = self.currentLocation.x;// $(self.parentContainer).offset().left;
+        var y = self.currentLocation.y;// $(self.parentContainer).offset().top;
+
+        let imagePath = self.settings.image || 'images/plane'+ self.settings.plane +'.png';
+
+
+        $(self.settings.containingElement).append($('<img/>', {
+            class: 'flying-image',
+            id: self.elementId,
+            src: imagePath,
+            alt: 'image that flies around',
+            css: {
+                "position" : "absolute",
+                "top": y,
+                "left": x
+            }
+        }));
+    };
+
+    self.getCurrentTargetXY = function() {
+        return self.mousePosition;
+    }
+
+    // this method just updates the screen based on our plane's current values
+    self.draw = function() {
+        //console.log(self.currentAngle)
+
+        $("#"+self.elementId).css({
+            "transform": "rotate("+self.currentAngle+"deg)",
+            "top": self.currentLocation.y,
+            "left": self.currentLocation.x,
+        });
+
+        setTimeout(function () { self.draw(); }, self.delay);
+    }
+    self.draw();
+
+    self.turn = function () {
+        // workout the angle to our target
+        var theTarget = self.getCurrentTargetXY();
+        var angleToTarget = angle(self.currentLocation.x, self.currentLocation.y, theTarget.x, theTarget.y);
+
+        //console.log("angle to target is " + angleToTarget + ", current angle is " + self.currentAngle);
+        // if the angle to the target is not the same as our current angle then adjust the current angle
+        if (angleToTarget != self.currentAngle) {
+            // angleToTarget ranges from -180 to 180. 0 is to the right, -90 is straight up, 90 is straight down.
+            var newAngle;
+            // if the turn iteration is larger than difference in angles then just put us on the target angle
+            if (self.turnIteration > Math.abs(angleToTarget - self.currentAngle)) { // Math.abs(lol)
+                console.log("zapping to target angle");
+                self.currentAngle = angleToTarget;
+                return;
+            }
+            
+            // this needs to take into account the direction we are facing and the direction to the target
+            if (getAngle(angleToTarget, self.currentAngle) <= 0) {
+                // turn counter clock wise
+                newAngle = self.currentAngle - self.turnIteration;
+                //console.log("going CCW");
+                if (newAngle < -180) {
+                    //console.log("angle past -180; flipping");
+                    newAngle = (newAngle + 360);
+                }
+            } else {
+                // turn clock wise
+                newAngle = self.currentAngle + self.turnIteration;
+                //console.log("going CW");
+                if (newAngle > 180) {
+                    //console.log("angle past 180; flipping");
+                    newAngle = (newAngle - 360);
+                }
+            }
+
+            self.currentAngle = newAngle;
+
+        }
+    };
+    self.move = function() {
+        // if we need to turn, do it before moving forwards
+        self.turn();
+        // move forwards in the direction we are facing
+        var angleInRads = self.currentAngle * (Math.PI / 180);
+        var distance = self.currentSpeed / 10; 
+        // what is the adjacent (X)
+        var adjacent = Math.cos(angleInRads) * distance;
+        // what is the opposite (Y)
+        var opposite = Math.sin(angleInRads) * distance;
+        self.currentLocation.x = self.currentLocation.x + adjacent;
+        self.currentLocation.y = self.currentLocation.y + opposite;
+        setTimeout(function () { self.move(); }, self.delay);
+    }
+    self.move();
+
+    self.initialize = function() {
+        // we want to know where the mouse is so we can do stuff at that location
+        $(self.parentContainer).mousemove(function(event) {
+            self.mousePosition.x = event.pageX;
+            self.mousePosition.y = event.pageY;
+        });
+        self.addImageToPage();
+    };
+    self.initialize();
+
+
+}
+
 var PointerShenanigansFollowingImage = function(parentContainer, settings) {
     var self = this;
 
@@ -44,6 +195,7 @@ var PointerShenanigansFollowingImage = function(parentContainer, settings) {
 
     self.addImageToPage = function() {
 
+        // this is an attempt to start the image in the top left of the parent container
         var x = $(self.parentContainer).offset().left;
         var y = $(self.parentContainer).offset().top;
 
@@ -511,6 +663,8 @@ $.fn.StartShenanigans = function(pointerType, settings) {
         new PointerShenanigansTextTrail($(this),settings);
     } else if (pointerType === 'followingImage') {
         new PointerShenanigansFollowingImage($(this),settings);
+    } else if (pointerType === 'flyingImage') {
+        new PointerShenanigansFlyingImage($(this),settings);
     } else {
         console.log("mate, I dunno what " + pointerType + " is.");
     }
