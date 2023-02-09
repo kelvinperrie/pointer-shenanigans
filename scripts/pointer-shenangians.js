@@ -40,16 +40,15 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
         image: '',                                  // the image that does the flying
         plane: 3,                                   // the default plane to use; there are three!
         containingElement: "body",                  // the element we are going to put our new elements in
-        animationDelay: 100,                        // how long we wait before redoing our animation loop
+        delay: 50,                                  // how quick our loops run
+        turnIteration: 5,                           // this is how fast our plane can turn, small number = slower turning
+        currentSpeed : 50,                          // how fast our plane moves
     }
     self.settings = $.extend( {}, self.defaults, settings );
     self.mousePosition = { x: null, y: null };          // the x,y of the mouseposition
-    self.delay = 50;
 
-    // plane settings
+    // plane specific settings
     self.currentAngle = 0;
-    self.currentSpeed = 50;
-    self.turnIteration = 5;
     self.currentLocation = { x: 100, y: 900 };
 
     self.addImageToPage = function() {
@@ -88,7 +87,7 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
             "left": self.currentLocation.x,
         });
 
-        setTimeout(function () { self.draw(); }, self.delay);
+        setTimeout(function () { self.draw(); }, self.settings.delay);
     }
     self.draw();
 
@@ -103,7 +102,7 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
             // angleToTarget ranges from -180 to 180. 0 is to the right, -90 is straight up, 90 is straight down.
             var newAngle;
             // if the turn iteration is larger than difference in angles then just put us on the target angle
-            if (self.turnIteration > Math.abs(angleToTarget - self.currentAngle)) { // Math.abs(lol)
+            if (self.settings.turnIteration > Math.abs(angleToTarget - self.currentAngle)) { // Math.abs(lol)
                 console.log("zapping to target angle");
                 self.currentAngle = angleToTarget;
                 return;
@@ -112,7 +111,7 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
             // this needs to take into account the direction we are facing and the direction to the target
             if (getAngle(angleToTarget, self.currentAngle) <= 0) {
                 // turn counter clock wise
-                newAngle = self.currentAngle - self.turnIteration;
+                newAngle = self.currentAngle - self.settings.turnIteration;
                 //console.log("going CCW");
                 if (newAngle < -180) {
                     //console.log("angle past -180; flipping");
@@ -120,7 +119,7 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
                 }
             } else {
                 // turn clock wise
-                newAngle = self.currentAngle + self.turnIteration;
+                newAngle = self.currentAngle + self.settings.turnIteration;
                 //console.log("going CW");
                 if (newAngle > 180) {
                     //console.log("angle past 180; flipping");
@@ -137,14 +136,14 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
         self.turn();
         // move forwards in the direction we are facing
         var angleInRads = self.currentAngle * (Math.PI / 180);
-        var distance = self.currentSpeed / 10; 
+        var distance = self.settings.currentSpeed / 10; 
         // what is the adjacent (X)
         var adjacent = Math.cos(angleInRads) * distance;
         // what is the opposite (Y)
         var opposite = Math.sin(angleInRads) * distance;
         self.currentLocation.x = self.currentLocation.x + adjacent;
         self.currentLocation.y = self.currentLocation.y + opposite;
-        setTimeout(function () { self.move(); }, self.delay);
+        setTimeout(function () { self.move(); }, self.settings.delay);
     }
     self.move();
 
