@@ -43,22 +43,24 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
         delay: 50,                                  // how quick our loops run
         turnIteration: 5,                           // this is how fast our plane can turn, small number = slower turning
         currentSpeed : 50,                          // how fast our plane moves
+        targetElementId : "",                       // the id of an element e.g. 'myElement' that you want the plane to target rather than the mouse cursor
     }
     self.settings = $.extend( {}, self.defaults, settings );
     self.mousePosition = { x: null, y: null };          // the x,y of the mouseposition
 
     // plane specific settings
     self.currentAngle = 0;
-    self.currentLocation = { x: 100, y: 900 };
+
+    // this is an attempt to start the image in the top left of the parent container
+    self.currentLocation = { x: $(self.parentContainer).offset().left, y: $(self.parentContainer).offset().top };
+    self.mousePosition.x = self.currentLocation.x;
+    self.mousePosition.y = self.currentLocation.y;
 
     self.addImageToPage = function() {
-
-        // this is an attempt to start the image in the top left of the parent container
-        var x = self.currentLocation.x;// $(self.parentContainer).offset().left;
-        var y = self.currentLocation.y;// $(self.parentContainer).offset().top;
+        var x = self.currentLocation.x;
+        var y = self.currentLocation.y;
 
         let imagePath = self.settings.image || 'images/plane'+ self.settings.plane +'.png';
-
 
         $(self.settings.containingElement).append($('<img/>', {
             class: 'flying-image',
@@ -67,14 +69,20 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
             alt: 'image that flies around',
             css: {
                 "position" : "absolute",
-                "top": y,
-                "left": x
+                "top": y +"px",
+                "left": x +"px"
             }
         }));
     };
 
     self.getCurrentTargetXY = function() {
-        return self.mousePosition;
+        // if we are targeting an elment then use the x,y of that, otherwise just point it to where we last saw the mouse
+        if(self.settings.targetElementId) {
+            var position = $("#" + self.settings.targetElementId).offset();
+            return { x : position.left, y : position.top }
+        } else {
+            return self.mousePosition;
+        }
     }
 
     // this method just updates the screen based on our plane's current values
@@ -83,8 +91,8 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
 
         $("#"+self.elementId).css({
             "transform": "rotate("+self.currentAngle+"deg)",
-            "top": self.currentLocation.y,
-            "left": self.currentLocation.x,
+            "top": self.currentLocation.y + "px",
+            "left": self.currentLocation.x+ "px",
         });
 
         setTimeout(function () { self.draw(); }, self.settings.delay);
@@ -103,7 +111,7 @@ var PointerShenanigansFlyingImage = function(parentContainer, settings) {
             var newAngle;
             // if the turn iteration is larger than difference in angles then just put us on the target angle
             if (self.settings.turnIteration > Math.abs(angleToTarget - self.currentAngle)) { // Math.abs(lol)
-                console.log("zapping to target angle");
+                //console.log("zapping to target angle");
                 self.currentAngle = angleToTarget;
                 return;
             }

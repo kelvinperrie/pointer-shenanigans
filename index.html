@@ -8,10 +8,12 @@
     <style>
     </style>
     <title>pointers</title>
+    <script src="scripts/jquery-3.3.1.min.js"></script>
+    <script src="scripts/pointer-shenangians.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="row intro-row">
+      <div class="row intro-row alt-colour-one">
         <p>
           <h2>The plan is to make some pointer animation things just like we use to have on the Internet in the good old days</h2>
 
@@ -35,8 +37,11 @@
         </pre>
         <br/><br/><br/><br/><br/>
         <br/><br/><br/><br/><br/><br/>
+        <script>
+          $(".following-image-row-1").StartShenanigans("followingImage")
+        </script>
       </div>
-      <div class="following-image-row-2">
+      <div class="following-image-row-2 alt-colour-one">
         This one is the same as the above, an image that follows the cursor, but you can change image. I have used an image that could be a ufo or it could be a donut.
         <br/><br/>
         <pre>
@@ -44,6 +49,9 @@
         </pre>
         <br/><br/><br/><br/><br/>
         <br/><br/><br/><br/><br/><br/>
+        <script>
+          $(".following-image-row-2").StartShenanigans("followingImage", { image : "images/ufo-or-donut.png" })
+        </script>
       </div>
       <div class="flying-image-row-1">
         This is an image that flies at the cursor. The image needs to start facing to the left. 
@@ -55,6 +63,31 @@
         </pre>
         <br/><br/><br/><br/><br/>
         <br/><br/><br/><br/><br/><br/>
+        <script>
+          $('.flying-image-row-1').StartShenanigans("flyingImage");
+        </script>
+      </div>
+      <div class="flying-image-row-2 alt-colour-one">
+        This is the flying image again. But we are going to make a ufo (or donut) image  the follows the cursor, then we are going to target the flying image to that.
+        <br/><br/>
+        <pre>
+          $(".flying-image-row-2").StartShenanigans("followingImage", { image : "images/ufo-or-donut.png" })
+          
+          // i happen to know that the id for the above created element is following-image-3 (cause there are two on the page above this)
+          // so i am going to pass that id so our place follows it
+          
+          $('.flying-image-row-2').StartShenanigans("flyingImage", { plane: 2 , targetElementId: "following-image-3" });
+        </pre>
+        <br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/>
+        <script>
+          $(".flying-image-row-2").StartShenanigans("followingImage", { image : "images/ufo-or-donut.png" })
+
+          // i happen to know that the id for the above created element is following-image-3 (cause there are two on the page above this)
+          // so i am going to pass that id so our place follows it
+          
+          $('.flying-image-row-2').StartShenanigans("flyingImage", { plane: 2 , targetElementId: "following-image-3" });
+        </script>
       </div>
       <div class="row text-trails-row-1">
         This one will cause the cursor to leave a trail of text behind it. Just whatever the defaults are.
@@ -64,7 +97,7 @@
         <br/><br/><br/><br/><br/>
         <br/><br/><br/><br/><br/><br/>
       </div>
-      <div class="row text-trails-row-2">
+      <div class="row text-trails-row-2 alt-colour-two">
         This is another text trail, give it some styling, set the text, only output it just the once, don't let it fade so it stays forever
         <pre>
           $(".text-trails-row-2").StartShenanigans("textTrail", {
@@ -76,7 +109,7 @@
         </pre>
         <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
       </div>
-        <div class="row default-row">
+        <div class="row default-row alt-colour-one">
             <div class="col">
 
               <p>
@@ -109,7 +142,7 @@
             </p>
           </div>
         </div>
-        <div class="row second-row">
+        <div class="row second-row alt-colour-two">
           <div class="col">
             <p>
               Also icon trail, set some options.
@@ -152,7 +185,7 @@
             </p>
           </div>
         </div>
-        <div class="row forth-row">
+        <div class="row forth-row alt-colour-one">
           <div class="col">
             <p>
               Icon trail, don't fade the icons
@@ -171,7 +204,7 @@
             </p>
           </div>
         </div>
-        <div class="row fifth-row">
+        <div class="row fifth-row alt-colour-two">
           <div class="col">
             <p>
               This one is the sparks animation. Whatever the default is.
@@ -182,7 +215,7 @@
             </p>
           </div>
         </div>
-        <div class="row fifthish-row">
+        <div class="row fifthish-row alt-colour-two">
           <div class="col">
             <p>
               This will try to stick the sparks to the cursor
@@ -196,7 +229,7 @@
             </p>
           </div>
         </div>
-        <div class="row sixth-row">
+        <div class="row sixth-row alt-colour-two">
           <div class="col">
             <p>
               This one is HARDCORE sparks.
@@ -223,7 +256,7 @@
             </p>
           </div>
         </div>
-        <div class="row eighth-row">
+        <div class="row eighth-row alt-colour-two">
           <div class="col">
             <p>
               What happens if you do more than one at once, some with slowed down animations?
@@ -262,15 +295,11 @@
           </div>
         </div>
     </div>
-    <script src="scripts/jquery-3.3.1.min.js"></script>
-    <script src="scripts/pointer-shenangians.js"></script>
+
     <script>
       
 
-      $(".following-image-row-1").StartShenanigans("followingImage")
-      $(".following-image-row-2").StartShenanigans("followingImage", { image : "images/ufo-or-donut.png" })
 
-      $('.flying-image-row-1').StartShenanigans("flyingImage");
 
       $(".text-trails-row-1").StartShenanigans("textTrail");
       $(".text-trails-row-2").StartShenanigans("textTrail", {

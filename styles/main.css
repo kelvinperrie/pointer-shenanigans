@@ -1,20 +1,16 @@
 
 
 
-/* this is just stuff to make our particular page look better */
+/* this is just stuff to make our example/test page look better */
 .row {
   padding: 10px;
-}
-.first-row, .third-row  {
   background-color: darkkhaki;
 }
-.intro-row, .default-row, .forth-row, .following-image-row-2 {
+
+.alt-colour-one {
   background-color: cornsilk;
 }
-
-.second-row, .fifth-row, .fifthish-row, .sixth-row, .eighth-row {
+.alt-colour-two {
   background-color: black;
   color: #fff;
 }
-
-
